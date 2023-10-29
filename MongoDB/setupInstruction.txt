@@ -1,0 +1,6 @@
+Download the MongoDB at https://www.mongodb.com/try/download/community (not MongoDB Altas)
+
+After installation, add MongoDB bin directory to your system's PATH environment variable. See https://www.mongodb.com/docs/mongodb-shell/install/
+
+Create local .dev file. Add
+DATABASE_URL=mongodb://localhost/user
