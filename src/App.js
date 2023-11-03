@@ -1,21 +1,22 @@
-
-import React, {useState} from 'react';
 import './App.css';
 import { Login } from './auth/Login';
-import { Signup } from './auth/Signup'; 
+import { Signup } from './auth/Signup';
+import Main from './Frontend/Main';
+import { BrowserRouter as Router,  Routes,  Route } from "react-router-dom";
+import Home from './Frontend/Home';
 
-function App(){
-  const [currentForm, setCurrentForm] = useState('login');
-
-  const switchform = (formName) => {
-    setCurrentForm(formName);
-  }
-
+function App() {
+  
   return (
     <div className="App">
-      {
-        currentForm === 'login' ? <Login onFormSwitch={switchform}/> : <Signup onFormSwitch={switchform}/>
-      }
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/" element={<Main/>}/>
+          <Route path="/signup" element={<Signup/>}/>
+          <Route path="/home" element={<Home/>}/>
+        </Routes>
+      </Router>
     </div>
   );
 }
