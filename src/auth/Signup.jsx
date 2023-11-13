@@ -9,8 +9,6 @@ export const Signup = (props) => {
     //set up backend server
     async function handleSubmit(e) {
         e.preventDefault();
-    
-        console.log(username);
         try{
             await axios.post("http://localhost:8001/signup", {
                 username, pass

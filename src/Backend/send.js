@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const collection = require('./mongo')
 const app = express();
+const CryptoJS = require('crypto-js');
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
@@ -16,11 +17,13 @@ app.post("/login", async(req,res)=>{
 
     try{
         const user=await collection.findOne({username:username})
-        
+        //password decryption
+        const key = '12345';
+        const decrypted = CryptoJS.AES.decrypt(user.pass, key).toString(CryptoJS.enc.Utf8);
         
         //if username is already exist
         if(user){
-            if (user.pass === pass){
+            if (decrypted === pass){
                 res.json("Success");
             }
             else {
@@ -38,10 +41,12 @@ app.post("/login", async(req,res)=>{
 
 app.post("/signup", async(req,res)=>{
     const{username, pass}=req.body;
-
+    //password encryption
+    const key = '12345';
+    const encrypted = CryptoJS.AES.encrypt(pass, key).toString();
     const data = {
         username:username,
-        pass:pass
+        pass:encrypted
     }
 
     try{
