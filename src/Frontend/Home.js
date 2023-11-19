@@ -24,6 +24,12 @@ function Home() {
         link.click();
     }
 
+    const handlePixelate = () => {
+        // Call the external function here and pass the image to it
+        // pixelateImage(image);
+        return;
+    }
+
     // TODO: Change pallete to resizeble box
     return (
         <div className='MainPage'>
@@ -34,7 +40,7 @@ function Home() {
                 <img src={image} alt='Uploaded for editing' style={{maxWidth: '100%', maxHeight: '100%'}} />
             </div>}
             {image && <button onClick={handleDownload}>Download Image</button>}
-            
+            {image && <button onClick={handlePixelate}>Pixelate Image</button>}
         </div>
     );
 }
