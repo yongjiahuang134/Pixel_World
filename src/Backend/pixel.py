@@ -10,7 +10,6 @@ def sobel_edge_detection(image_array):
     sobel_edges /= np.max(sobel_edges)
     return sobel_edges
 
-# Your existing pixelization function, modified to take two different scales
 def basic_pixelization(img, scale):
     width, height = img.size
     pixels = img.load()  # Get the pixels of the image
