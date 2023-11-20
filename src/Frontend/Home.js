@@ -105,6 +105,7 @@ function Home() {
             {image && <button onClick={handleDownload}>Download Image</button>}
             {image && <button onClick={handlePixelate}>Pixelate Image</button>}
             {image && <button onClick={uploadImageToServer}>Save Image to Server</button>}
+            {image && <button onClick={() => window.location.href='/images'}>View Images</button>}
         </div>
     );
 }

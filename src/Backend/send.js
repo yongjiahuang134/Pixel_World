@@ -93,3 +93,13 @@ app.post('/uploadimage', async (req, res) => {
 app.listen(8002, () => {
     console.log('Server is running on port 8001');
 });
+
+app.get('/getimages', async (req, res) => {
+    try {
+        const images = await Image.find(); 
+        res.json(images);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Error fetching images' });
+    }
+});

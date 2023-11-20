@@ -4,6 +4,7 @@ import { Signup } from './auth/Signup';
 import Main from './Frontend/Main';
 import { BrowserRouter as Router,  Routes,  Route } from "react-router-dom";
 import Home from './Frontend/Home';
+import ImagesList from './Backend/ImagesList';
 
 function App() {
   
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<Main/>}/>
           <Route path="/signup" element={<Signup/>}/>
           <Route path="/home" element={<Home/>}/>
+          <Route path="/images" element={<ImagesList/>} />
         </Routes>
       </Router>
     </div>
