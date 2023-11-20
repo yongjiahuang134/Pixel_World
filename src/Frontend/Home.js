@@ -74,9 +74,25 @@ function Home() {
                 image: image,
             }),
         })
-        .then(response => response.json())
+        .then(response => {
+            if (response.status === 200) {
+                // If the response status is 200 (OK), log success
+                console.log('Success:', response);
+            } else if (response.status === 400) {
+                // If the response status is 400 (Bad Request), handle the error
+                return response.json();
+            } else {
+                // Handle other response statuses here if needed
+                throw new Error('Unexpected error');
+            }
+        })
         .then(data => {
-            console.log('Success:', data);
+            // Handle the data in case of a 400 response
+            if (data) {
+                console.error('Error:', data.message);
+                // Display an alert to change to another name
+                alert(`Error: ${data.message}. Please choose another name.`);
+            }
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -118,7 +134,7 @@ function Home() {
             {image && <button onClick={handlePixelate}>Pixelate Image</button>}
             {image && <button onClick={uploadImageToServer}>Save Image to Server</button>}
             {image && <input type="text" id="imageName" name="imageName" placeholder="Type image name here" value={imageName} onChange={handleImageName}></input>}
-            {image && <button onClick={() => window.location.href='/images'}>View Images</button>}
+            {image && <button onClick={() => window.location.href=`/images/${username}`}>View Images</button>}
         </div>
     );
 }

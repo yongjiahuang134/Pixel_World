@@ -77,6 +77,11 @@ app.post('/uploadimage', async (req, res) => {
     const { username, imageName, image } = req.body;
 
     try {
+        const existingImage = await Image.findOne({ username, imageName });
+
+        if (existingImage) {
+            return res.status(400).json({ message: 'Image with the same username and imageName already exists. Please choose a different name.' });
+        }
         const newImage = new Image({
             username: username,
             imageName: imageName,
@@ -96,6 +101,7 @@ app.listen(8002, () => {
 });
 
 app.get('/getimages', async (req, res) => {
+    const { username } = req.query;
     try {
         const images = await Image.find(); 
         res.json(images);
