@@ -18,6 +18,19 @@ const newSchema = new mongoose.Schema({
     }
 })
 
+const imageSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: true
+    },
+    imageData: {
+        type: String,
+        required: true
+    }
+});
+
 const collection = mongoose.model("collection", newSchema);
 
-module.exports=collection;
+const Image = mongoose.model("Image", imageSchema);
+
+module.exports= {collection, Image};

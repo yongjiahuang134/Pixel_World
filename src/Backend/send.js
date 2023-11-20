@@ -2,12 +2,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const collection = require('./mongo')
+const {collection, Image } = require('./mongo')
 const app = express();
+
+
 const CryptoJS = require('crypto-js');
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true}));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.get("/", cors(), (req,res)=>{
 })
@@ -70,3 +72,24 @@ app.post("/signup", async(req,res)=>{
 app.listen(8001, ()=>{
     console.log("port connected");
 })
+
+app.post('/uploadimage', async (req, res) => {
+    const { username, image } = req.body;
+
+    try {
+        const newImage = new Image({
+            username: username,
+            imageData: image
+        });
+        await newImage.save();
+
+        res.send({ message: 'Image uploaded successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Error uploading image' });
+    }
+});
+
+app.listen(8002, () => {
+    console.log('Server is running on port 8001');
+});
