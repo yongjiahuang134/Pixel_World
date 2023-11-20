@@ -20,6 +20,8 @@ You may also see any lint errors in the console.
 
 ## To Run Backend
 
+`npx nodemon src/Backend/send.js`
+
 `cd Backend`
 
 `nodemon send.js`
