@@ -47,7 +47,7 @@ export const Signup = (props) => {
                     alert("User already have an account");
                 }
                 else if (res.data==="not exist"){
-                    history("/home");
+                    history(`/home/${username}`);
                 }
             }).catch(e=>{
                 alert("wrong");

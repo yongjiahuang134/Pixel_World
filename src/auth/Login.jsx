@@ -45,7 +45,7 @@ export const Login = (props) => {
                 username, pass
             }).then(res=>{
                 if(res.data==="Success"){
-                    history("/home");
+                    history(`/home/${username}`);
                 }
                 else if (res.data==="Password not match"){
                     alert("Incorrect Password");

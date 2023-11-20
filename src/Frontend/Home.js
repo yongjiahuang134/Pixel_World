@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 //Main Page after login/signup
 
 
 function Home() {
     const [image, setImage] = useState(null);
+    const [imageName, setImageName] = useState('');
+    const { username } = useParams();
 
     // const handleImageUpload = (event) => {
     //     const file = event.target.files[0];
@@ -59,13 +62,15 @@ function Home() {
     };
 
     const uploadImageToServer = () => {
-        fetch('http://localhost:8002/uploadimage', {
+        if (image && imageName){
+            fetch('http://localhost:8002/uploadimage', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                username: 'username',
+                username: username,
+                imageName: imageName,
                 image: image,
             }),
         })
@@ -76,6 +81,9 @@ function Home() {
         .catch((error) => {
             console.error('Error:', error);
         });
+        } else {
+            alert("You need to enter Image name!");      
+        }
     };
 
     const handleDownload = () => {
@@ -91,10 +99,14 @@ function Home() {
         return;
     }
 
+    const handleImageName = (event) => {
+        setImageName(event.target.value);
+    }
+
     // TODO: Change pallete to resizeble box
     return (
         <div className='MainPage'>
-            <h1>Welcome to Home page</h1>
+            <h1>Welcome to Home page {username}</h1>
             <input type='file' accept='image/*' id='fileUpload' onChange={handleImageUpload} style={{display: 'none'}} />
             <label htmlFor='fileUpload' style={{cursor: 'pointer'}}>Upload Image</label>
             {image && (
@@ -105,6 +117,7 @@ function Home() {
             {image && <button onClick={handleDownload}>Download Image</button>}
             {image && <button onClick={handlePixelate}>Pixelate Image</button>}
             {image && <button onClick={uploadImageToServer}>Save Image to Server</button>}
+            {image && <input type="text" id="imageName" name="imageName" placeholder="Type image name here" value={imageName} onChange={handleImageName}></input>}
             {image && <button onClick={() => window.location.href='/images'}>View Images</button>}
         </div>
     );

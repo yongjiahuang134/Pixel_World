@@ -74,11 +74,12 @@ app.listen(8001, ()=>{
 })
 
 app.post('/uploadimage', async (req, res) => {
-    const { username, image } = req.body;
+    const { username, imageName, image } = req.body;
 
     try {
         const newImage = new Image({
             username: username,
+            imageName: imageName,
             imageData: image
         });
         await newImage.save();
