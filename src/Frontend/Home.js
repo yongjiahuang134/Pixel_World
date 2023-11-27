@@ -1,24 +1,13 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams , useNavigate } from 'react-router-dom';
 
 //Main Page after login/signup
 
-
 function Home() {
+
     const [image, setImage] = useState(null);
     const [imageName, setImageName] = useState('');
     const { username } = useParams();
-
-    // const handleImageUpload = (event) => {
-    //     const file = event.target.files[0];
-    //     const reader = new FileReader();
-
-    //     reader.onloadend = () => {
-    //         setImage(reader.result);
-    //     }
-
-    //     reader.readAsDataURL(file);
-    // }
 
     const compressImage = (file, maxWidth, maxHeight, callback) => {
         const reader = new FileReader();
@@ -118,6 +107,13 @@ function Home() {
     const handleImageName = (event) => {
         setImageName(event.target.value);
     }
+    
+    const navigate = useNavigate();
+
+    const handleCloudButtonClick = () => {
+        navigate(`/images/${username}`);
+    };
+
 
     // TODO: Change pallete to resizeble box
     return (
@@ -125,6 +121,7 @@ function Home() {
             <h1>Welcome to Home page {username}</h1>
             <input type='file' accept='image/*' id='fileUpload' onChange={handleImageUpload} style={{display: 'none'}} />
             <label htmlFor='fileUpload' style={{cursor: 'pointer'}}>Upload Image</label>
+            <button onClick={handleCloudButtonClick}>Cloud</button>
             {image && (
                 <div style={{width: '500px', height: '500px'}}>
                     <img src={image} alt='Uploaded' style={{maxWidth: '100%', maxHeight: '100%'}} />

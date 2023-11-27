@@ -101,9 +101,9 @@ app.listen(8002, () => {
 });
 
 app.get('/getimages', async (req, res) => {
-    const { username } = req.query;
+    const { username } = req.query; // 获取查询参数
     try {
-        const images = await Image.find(); 
+        const images = await Image.find({ username: username }); // 根据用户名查找图片
         res.json(images);
     } catch (error) {
         console.error(error);
