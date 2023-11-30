@@ -115,23 +115,86 @@ function Home() {
         navigate(`/images/${username}`);
     };
 
-    const handleProcessImage = () => {
-        if (image) {
-            const formData = new FormData();
-            formData.append('image', image);
+    function classifyColors(colors, maxColors) {
+        const colorArray = Array.from(colors).map(colorStr => {
+            const match = colorStr.match(/\d+/g);
+            return match ? match.map(Number) : [0, 0, 0];
+        });
+        const centers = colorArray.slice(0, maxColors);
+        let assignments = new Array(colorArray.length).fill(0);
     
-            fetch('http://localhost:3000/process-image', {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                setProcessedColors(data); // 更新状态
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        let changed = true;
+        while (changed) {
+            changed = false;
+            for (let i = 0; i < colorArray.length; i++) {
+                let minDist = Infinity;
+                let closest = 0;
+                for (let j = 0; j < centers.length; j++) {
+                    const dist = euclideanDistance(colorArray[i], centers[j]);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closest = j;
+                    }
+                }
+                if (assignments[i] !== closest) {
+                    assignments[i] = closest;
+                    changed = true;
+                }
+            }
+            if (changed) {
+                for (let i = 0; i < centers.length; i++) {
+                    let sum = [0, 0, 0];
+                    let count = 0;
+                    for (let j = 0; j < colorArray.length; j++) {
+                        if (assignments[j] === i) {
+                            sum[0] += colorArray[j][0];
+                            sum[1] += colorArray[j][1];
+                            sum[2] += colorArray[j][2];
+                            count++;
+                        }
+                    }
+                    if (count > 0) {
+                        centers[i] = sum.map(v => Math.round(v / count));
+                    }
+                }
+            }
         }
+        return centers.map(c => `rgb(${c[0]}, ${c[1]}, ${c[2]})`);
+    }
+    function euclideanDistance(color1, color2) {
+        return Math.sqrt(
+            Math.pow(color1[0] - color2[0], 2) +
+            Math.pow(color1[1] - color2[1], 2) +
+            Math.pow(color1[2] - color2[2], 2)
+        );
+    }
+    
+    const handleProcessImage = () => {
+        const img = new Image();
+        img.src = image;
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+    
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+            const colorSet = new Set();
+    
+            for (let i = 0; i < imageData.length; i += 4) {
+                const r = imageData[i];
+                const g = imageData[i + 1];
+                const b = imageData[i + 2];
+                
+                const colorStr = `rgb(${r}, ${g}, ${b})`;
+                colorSet.add(colorStr);
+            }
+            
+            const colorList = Array.from(colorSet);
+            const classifiedColors = classifyColors(colorList, 300);
+            setProcessedColors(classifiedColors);
+        };
     };
 
     // TODO: Change pallete to resizeble box
@@ -153,11 +216,16 @@ function Home() {
             {image && <input type="text" id="imageName" name="imageName" placeholder="Type image name here" value={imageName} onChange={handleImageName}></input>}
             {image && <button onClick={() => window.location.href=`/images/${username}`}>View Images</button>}
             {processedColors && (
-                <ul>
-                    {Object.entries(processedColors).map(([color, id]) => (
-                        <li key={id}>{`Color: ${color}, ID: ${id}`}</li>
-                    ))}
-                </ul>
+                <div>
+                    <h2>Extracted Colors</h2>
+                    <ul>
+                        {Object.entries(processedColors).map(([color, id]) => (
+                            <li key={id} style={{color: color}}>
+                                {color} (ID: {id})
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             )}
         </div>
     );
