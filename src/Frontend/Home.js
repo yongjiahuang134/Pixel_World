@@ -8,6 +8,7 @@ function Home() {
     const [image, setImage] = useState(null);
     const [imageName, setImageName] = useState('');
     const { username } = useParams();
+    const [processedColors, setProcessedColors] = useState(null);
 
     const compressImage = (file, maxWidth, maxHeight, callback) => {
         const reader = new FileReader();
@@ -114,6 +115,24 @@ function Home() {
         navigate(`/images/${username}`);
     };
 
+    const handleProcessImage = () => {
+        if (image) {
+            const formData = new FormData();
+            formData.append('image', image);
+    
+            fetch('http://localhost:3000/process-image', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                setProcessedColors(data); // 更新状态
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    };
 
     // TODO: Change pallete to resizeble box
     return (
@@ -129,9 +148,17 @@ function Home() {
             )}
             {image && <button onClick={handleDownload}>Download Image</button>}
             {image && <button onClick={handlePixelate}>Pixelate Image</button>}
+            {image && <button onClick={handleProcessImage}>Process Image</button>}
             {image && <button onClick={uploadImageToServer}>Save Image to Server</button>}
             {image && <input type="text" id="imageName" name="imageName" placeholder="Type image name here" value={imageName} onChange={handleImageName}></input>}
             {image && <button onClick={() => window.location.href=`/images/${username}`}>View Images</button>}
+            {processedColors && (
+                <ul>
+                    {Object.entries(processedColors).map(([color, id]) => (
+                        <li key={id}>{`Color: ${color}, ID: ${id}`}</li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 }
