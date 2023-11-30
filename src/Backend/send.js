@@ -100,10 +100,10 @@ app.listen(8002, () => {
     console.log('Server is running on port 8001');
 });
 
-app.get('/getimages', async (req, res) => {
-    const { username } = req.query; // 获取查询参数
+app.get('/getimages/:username', async (req, res) => {
+    const { username } = req.params; 
     try {
-        const images = await Image.find({ username: username }); // 根据用户名查找图片
+        const images = await Image.find({ username: username });
         res.json(images);
     } catch (error) {
         console.error(error);
