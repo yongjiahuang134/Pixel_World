@@ -9,6 +9,7 @@ function Home() {
     const [imageName, setImageName] = useState('');
     const { username } = useParams();
     const [processedColors, setProcessedColors] = useState(null);
+    const [blockSize, setBlockSize] = useState(30);
 
     const compressImage = (file, maxWidth, maxHeight, callback) => {
         const reader = new FileReader();
@@ -99,11 +100,13 @@ function Home() {
         link.click();
     }
 
-    const handlePixelate = () => {
-        // Call the external function here and pass the image to it
-        // pixelateImage(image);
-        return;
-    }
+    // const handlePixelate = () => {
+    //     // Call the external function here and pass the image to it
+    //     // pixelateImage(image);
+
+
+    //     return;
+    // }
 
     const handleImageName = (event) => {
         setImageName(event.target.value);
@@ -168,7 +171,6 @@ function Home() {
             Math.pow(color1[2] - color2[2], 2)
         );
     }
-    
     const handleProcessImage = () => {
         const img = new Image();
         img.src = image;
@@ -196,7 +198,70 @@ function Home() {
             setProcessedColors(classifiedColors);
         };
     };
-
+    const pixelateImage = (ctx, img, blockSize) => {
+        for (let x = 0; x < img.width; x += blockSize) {
+            for (let y = 0; y < img.height; y += blockSize) {
+                const averageColor = calculateAverageColor(ctx, x, y, blockSize, img.width, img.height);
+                ctx.fillStyle = `rgba(${averageColor.r},${averageColor.g},${averageColor.b},${averageColor.a})`;
+                ctx.fillRect(x, y, blockSize, blockSize);
+            }
+        }
+    };
+    
+    const calculateAverageColor = (ctx, startX, startY, blockSize, width, height) => {
+        let total = { r: 0, g: 0, b: 0, a: 0 };
+        let count = 0;
+    
+        for (let x = 0; x < blockSize; x++) {
+            for (let y = 0; y < blockSize; y++) {
+                if ((startX + x < width) && (startY + y < height)) {
+                    const imageData = ctx.getImageData(startX + x, startY + y, 1, 1).data;
+                    total.r += imageData[0];
+                    total.g += imageData[1];
+                    total.b += imageData[2];
+                    total.a += imageData[3];
+                    count++;
+                }
+            }
+        }
+    
+        // Ensure at least one pixel was counted to avoid division by zero
+        count = count === 0 ? 1 : count;
+    
+        return {
+            r: Math.round(total.r / count),
+            g: Math.round(total.g / count),
+            b: Math.round(total.b / count),
+            a: Math.round(total.a / count)
+        };
+    };
+    
+    
+    
+    const handlePixelate = () => {
+        if (image && blockSize > 0 && blockSize < image.naturalWidth && blockSize < image.naturalHeight) {
+            const img = new Image();
+            img.src = image;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight);
+                
+                pixelateImage(ctx, img, blockSize);
+    
+                const pixelatedDataUrl = canvas.toDataURL();
+                setImage(pixelatedDataUrl);
+            };
+            img.onerror = () => {
+                console.error("Error loading image for pixelation");
+            };
+        } else {
+            alert("Block size must be a positive number.");
+        }
+    };
+        
     // TODO: Change pallete to resizeble box
     return (
         <div className='MainPage'>
@@ -210,6 +275,12 @@ function Home() {
                 </div>
             )}
             {image && <button class="button" onClick={handleDownload}>Download Image</button>}
+            <input 
+                type="number" 
+                value={blockSize}
+                onChange={(e) => setBlockSize(Number(e.target.value))}
+                placeholder="Enter block size"
+            />
             {image && <button class="button" onClick={handlePixelate}>Pixelate Image</button>}
             {image && <button class="button" onClick={handleProcessImage}>Process Image</button>}
             {image && <button class="button" onClick={uploadImageToServer}>Save Image to Server</button>}
