@@ -203,18 +203,18 @@ function Home() {
             <h1>Welcome to Home page {username}</h1>
             <input type='file' accept='image/*' id='fileUpload' onChange={handleImageUpload} style={{display: 'none'}} />
             <label htmlFor='fileUpload' style={{cursor: 'pointer'}}>Upload Image</label>
-            <button onClick={handleCloudButtonClick}>Cloud</button>
+            <button class="button" onClick={handleCloudButtonClick}>Cloud</button>
             {image && (
                 <div style={{width: '500px', height: '500px'}}>
                     <img src={image} alt='Uploaded' style={{maxWidth: '100%', maxHeight: '100%'}} />
                 </div>
             )}
-            {image && <button onClick={handleDownload}>Download Image</button>}
-            {image && <button onClick={handlePixelate}>Pixelate Image</button>}
-            {image && <button onClick={handleProcessImage}>Process Image</button>}
-            {image && <button onClick={uploadImageToServer}>Save Image to Server</button>}
+            {image && <button class="button" onClick={handleDownload}>Download Image</button>}
+            {image && <button class="button" onClick={handlePixelate}>Pixelate Image</button>}
+            {image && <button class="button" onClick={handleProcessImage}>Process Image</button>}
+            {image && <button class="button" onClick={uploadImageToServer}>Save Image to Server</button>}
             {image && <input type="text" id="imageName" name="imageName" placeholder="Type image name here" value={imageName} onChange={handleImageName}></input>}
-            {image && <button onClick={() => window.location.href=`/images/${username}`}>View Images</button>}
+            {image && <button class="button" onClick={() => window.location.href=`/images/${username}`}>View Images</button>}
             {processedColors && (
                 <div>
                     <h2>Extracted Colors</h2>

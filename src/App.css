@@ -4,12 +4,47 @@
   min-height: 100vh;
   align-items: center;
   justify-content: center;
-  background-color: pink;
+  background-color: #f9b8bf;
+  font-family: 'Lucida Console', Monaco, monospace;
 }
 
 .auth-form, .login-form, .signup-form{
   display:flex;
   flex-direction: column;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .container {
+    position: relative;
+  }
+
+  .MainPageh1 {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2; /* Higher z-index for the header */
+  }
+  .MainPageh2 {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+
+  @keyframes App-logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 }
 
 label{
