@@ -345,79 +345,70 @@ function Home() {
         };
     };
 
-function circleBasedPixelization(ctx, img, innerRadius, innerScale, outerScale) {
-    const width = img.width;
-    const height = img.height;
-    const centerX = width / 2;
-    const centerY = height / 2;
-    const radiusSquared = innerRadius * innerRadius;
-
-    ctx.drawImage(img, 0, 0, width, height);
-    const imageData = ctx.getImageData(0, 0, width, height);
-    const data = imageData.data;
-
-    // Function to check if a point is within the inner circle
-    function isInsideCircle(x, y) {
-        const dx = x - centerX;
-        const dy = y - centerY;
-        return dx * dx + dy * dy <= radiusSquared;
-    }
-
-    // Function to apply pixelization
-    function applyPixelization(startX, startY, endX, endY, scale) {
-        for (let x = startX; x < endX; x += scale) {
-            for (let y = startY; y < endY; y += scale) {
-                let sums = [0, 0, 0];
-                let count = 0;
-
-                // Collect pixel data within the block
-                for (let i = 0; i < scale; i++) {
-                    for (let j = 0; j < scale; j++) {
-                        if (x + i < width && y + j < height) {
-                            const index = ((y + j) * width + (x + i)) * 4;
-                            sums[0] += data[index];     // R
-                            sums[1] += data[index + 1]; // G
-                            sums[2] += data[index + 2]; // B
-                            count++;
-                        }
-                    }
-                }
-
-                // Calculate and apply the average color to the block
-                if (count > 0) {
-                    const avg = sums.map(s => s / count);
+    function circleBasedPixelization(ctx, img, innerRadius, innerScale, outerScale) {
+        const width = img.width;
+        const height = img.height;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const radiusSquared = innerRadius * innerRadius;
+    
+        ctx.drawImage(img, 0, 0, width, height);
+        const imageData = ctx.getImageData(0, 0, width, height);
+        const data = imageData.data;
+    
+        function isInsideCircle(x, y) {
+            const dx = x - centerX;
+            const dy = y - centerY;
+            return dx * dx + dy * dy <= radiusSquared;
+        }
+    
+        function applyPixelization(startX, startY, endX, endY, scale) {
+            for (let x = startX; x < endX; x += scale) {
+                for (let y = startY; y < endY; y += scale) {
+                    let sums = [0, 0, 0];
+                    let count = 0;
+    
                     for (let i = 0; i < scale; i++) {
                         for (let j = 0; j < scale; j++) {
                             if (x + i < width && y + j < height) {
                                 const index = ((y + j) * width + (x + i)) * 4;
-                                data[index] = avg[0];     // R
-                                data[index + 1] = avg[1]; // G
-                                data[index + 2] = avg[2]; // B
+                                sums[0] += data[index];     
+                                sums[1] += data[index + 1];
+                                sums[2] += data[index + 2];
+                                count++;
+                            }
+                        }
+                    }
+    
+                    if (count > 0) {
+                        const avg = sums.map(s => s / count);
+                        for (let i = 0; i < scale; i++) {
+                            for (let j = 0; j < scale; j++) {
+                                if (x + i < width && y + j < height) {
+                                    const index = ((y + j) * width + (x + i)) * 4;
+                                    data[index] = avg[0];
+                                    data[index + 1] = avg[1];
+                                    data[index + 2] = avg[2];
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }
-
-    // Apply pixelization to the inner circle first
-    applyPixelization(0, 0, width, height, innerScale);
-
-    // Apply pixelization to the area outside the inner circle
-    for (let x = 0; x < width; x += outerScale) {
-        for (let y = 0; y < height; y += outerScale) {
-            // Check if the current block overlaps with the inner circle
-            const overlapsInner = isInsideCircle(x, y) || isInsideCircle(x + outerScale, y) ||
-                                  isInsideCircle(x, y + outerScale) || isInsideCircle(x + outerScale, y + outerScale);
-            if (!overlapsInner) {
-                applyPixelization(x, y, x + outerScale, y + outerScale, outerScale);
+    
+        applyPixelization(0, 0, width, height, outerScale);
+    
+        for (let x = 0; x < width; x += innerScale) {
+            for (let y = 0; y < height; y += innerScale) {
+                if (isInsideCircle(x + innerScale / 2, y + innerScale / 2)) {
+                    applyPixelization(x, y, x + innerScale, y + innerScale, innerScale);
+                }
             }
         }
-    }
-
-    ctx.putImageData(imageData, 0, 0);
-}
+    
+        ctx.putImageData(imageData, 0, 0);
+    }    
 
 
 // 2
