@@ -263,6 +263,77 @@ function Home() {
             alert("Block size must be a positive number.");
         }
     };
+
+    // pixelate image with black and white: R, G, B --> average for each pixel
+    const handlePixelateBW = () => {
+        const img1 = new Image();
+        img1.src = image;
+        if (image && blockSize > 0 && blockSize < img1.naturalWidth && blockSize < img1.naturalHeight) {
+            const img = new Image();
+            img.src = image;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight);
+                
+                pixelateImageBW(ctx, img, blockSize);
+    
+                const pixelatedDataUrl = canvas.toDataURL();
+                setImage(pixelatedDataUrl);
+            };
+            img.onerror = () => {
+                console.error("Error loading image for pixelation");
+            };
+        } else {
+            alert("Block size must be a positive number.");
+        }
+    };
+    const pixelateImageBW = (ctx, img, blockSize) => {
+        for (let x = 0; x < img.width; x += blockSize) {
+            for (let y = 0; y < img.height; y += blockSize) {
+                const averageColor = calculateAverageColorBW(ctx, x, y, blockSize, img.width, img.height);
+                ctx.fillStyle = `rgba(${averageColor.r},${averageColor.g},${averageColor.b},${averageColor.a})`;
+                ctx.fillRect(x, y, blockSize, blockSize);
+            }
+        }
+    };
+    
+    const calculateAverageColorBW = (ctx, startX, startY, blockSize, width, height) => {
+        let total = { r: 0, g: 0, b: 0, a: 0 };
+        let count = 0;
+    
+        for (let x = 0; x < blockSize; x++) {
+            for (let y = 0; y < blockSize; y++) {
+                if ((startX + x < width) && (startY + y < height)) {
+                    const imageData = ctx.getImageData(startX + x, startY + y, 1, 1).data;
+                    total.r += imageData[0];
+                    total.g += imageData[1];
+                    total.b += imageData[2];
+                    total.a += imageData[3];
+                    count++;
+                }
+            }
+        }
+
+        let average = 0;
+        
+        average = total.r + total.g + total.b;
+        average /= 3;
+        average = Math.round(average);
+        total.r = average; total.b = average; total.g = average;
+
+        count = count === 0 ? 1 : count;
+    
+        return {
+            r: Math.round(total.r / count),
+            g: Math.round(total.g / count),
+            b: Math.round(total.b / count),
+            a: Math.round(total.a / count)
+        };
+      
+    };
         
     // TODO: Change pallete to resizeble box
     return (
@@ -284,6 +355,7 @@ function Home() {
                 placeholder="Enter block size"
             />
             {image && <button class="button" onClick={handlePixelate}>Pixelate Image</button>}
+            {image && <button class="button" onClick={handlePixelateBW}>Pixelate Image Black & White</button>}
             {image && <button class="button" onClick={handleProcessImage}>Process Image</button>}
             {image && <button class="button" onClick={uploadImageToServer}>Save Image to Server</button>}
             {image && <input type="text" id="imageName" name="imageName" placeholder="Type image name here" value={imageName} onChange={handleImageName}></input>}
