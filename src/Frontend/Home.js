@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams , useNavigate } from 'react-router-dom';
+import logo from './logo.jpg'
 
 //Main Page after login/signup
 
@@ -355,29 +356,47 @@ function Home() {
     // TODO: Change pallete to resizeble box
     return (
         <div className='MainPage'>
-            <h1>Welcome to Home page {username}</h1>
-            <input type='file' accept='image/*' id='fileUpload' onChange={handleImageUpload} style={{display: 'none'}} />
-            <label htmlFor='fileUpload' style={{cursor: 'pointer'}}>Upload Image</label>
-            <button class="button" onClick={handleCloudButtonClick}>Cloud</button>
-            {(image || pixelImage) && (
-                <div style={{width: '500px', height: '500px'}}>
-                    <img src={transformationApplied ? pixelImage : image} alt='Uploaded' style={{maxWidth: '100%', maxHeight: '100%'}} />
+            <img src={logo} alt="Logo" className="App-logo" style={{maxWidth: '10%', maxHeight: '10%'}}></img>
+            <h1>Hi {username}, Welcome to our Pixel World!</h1>
+            <div className="introduction-container">
+                <p className="Introduction">Let's begin your artwork. First, select an image to upload using the upload button.</p> 
+                <p className="Introduction">After you upload the image, you have a few options on how to pixelize your image. If you don't want the current changes, you can always click "Discard Changes" to go back to the original image that you uploaded. Lastly, remember to save your artwork to the server with a unique image name so you can view it in the Gallery!</p>
+                <p className="Introduction">Enjoy your time here!</p>
+            </div>
+            
+            <label htmlFor="fileUpload" className="feature-button">
+                Upload Image
+                <input type="file" accept="image/*" id="fileUpload" onChange={handleImageUpload} style={{ display: 'none' }} />
+            </label>
+            <button class="feature-button" onClick={handleCloudButtonClick}>Gallery</button>
+            <div className="image-container">
+                <div className="imageWrap">
+                    {(image || pixelImage) && (
+                        <div style={{width: '500px', height: '500px'}}>
+                            <img className="uploaded-image" src={transformationApplied ? pixelImage : image} alt='Uploaded' style={{maxWidth: '100%', maxHeight: '100%'}} />
+                        </div>
+                    )}
                 </div>
-            )}
-            {(image || pixelImage) && <button class="button" onClick={handleDownload}>Download Image</button>}
-            <input 
-                type="number" 
-                value={blockSize}
-                onChange={(e) => setBlockSize(Number(e.target.value))}
-                placeholder="Enter block size"
-            />
-            {(image || pixelImage) && <button class="button" onClick={handlePixelate}>Pixelate Image</button>}
-            {(image || pixelImage) && <button class="button" onClick={handlePixelateBW}>Black & White</button>}
-            {(image || pixelImage) && <button class="button" onClick={handleProcessImage}>Process Image</button>}
-            {(image || pixelImage) && <button class="button" onClick={uploadImageToServer}>Save Image to Server</button>}
-            {(image || pixelImage) && <button class="button" onClick={DiscardChange}>Discard Change</button>}
+        
+                <div className="feature-buttons">
+
+                    {(image || pixelImage) && <button className="feature-button" onClick={handlePixelate}>Pixelate Image</button>}
+                    {(image || pixelImage) && <button className="feature-button" onClick={handlePixelateBW}>Black & White</button>}
+                    {(image || pixelImage) && <button className="feature-button" onClick={handleProcessImage}>Process Image</button>}
+                </div>
+            </div>
+
+            {(image || pixelImage) && <button class="feature-button" onClick={handleDownload}>Download Image</button>}
+            {(image || pixelImage) && <input 
+                    type="number" 
+                    value={blockSize}
+                    onChange={(e) => setBlockSize(Number(e.target.value))}
+                    placeholder="Enter block size"
+            />}
+            {(image || pixelImage) && <button class="feature-button" onClick={uploadImageToServer}>Save Image to Server</button>}
+            {(image || pixelImage) && <button class="feature-button" onClick={DiscardChange}>Discard Changes</button>}
             {(image || pixelImage) && <input type="text" id="imageName" name="imageName" placeholder="Type image name here" value={imageName} onChange={handleImageName}></input>}
-            {(image || pixelImage) && <button class="button" onClick={() => window.location.href=`/images/${username}`}>View Images</button>}
+            {(image || pixelImage) && <button class="feature-button" onClick={() => window.location.href=`/images/${username}`}>View Images</button>}
             {processedColors && (
                 <div>
                     <h2>Extracted Colors</h2>

@@ -37,6 +37,7 @@
     animation: App-logo-spin infinite 20s linear;
   }
 
+
   @keyframes App-logo-spin {
     from {
       transform: rotate(0deg);
@@ -102,3 +103,90 @@ input {
   cursor: pointer;
 }
 
+.image-container {
+  display: flex;
+  margin-left:20%;
+}
+
+.feature-buttons {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.Introduction {
+  font-size: 14px; /* Adjust the font size as needed */
+  text-align: justify;
+}
+.introduction-container{
+  background-size: 4px 3px;
+  border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+  box-sizing: border-box;
+  color: #41403e;
+  border: 3px solid #1e1a1a; 
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #fff ; 
+  display: inline-block;
+  font-family: 'Lucida Console', Monaco, monospace;
+  font-size: 1rem;
+  line-height: 23px;
+  outline: none;
+  text-decoration: none;
+  transition: all 235ms ease-in-out;
+  border-bottom-left-radius: 15px 255px;
+  border-bottom-right-radius: 225px 15px;
+  border-top-left-radius: 255px 15px;
+  border-top-right-radius: 15px 225px;
+}
+/*Credit: PaperCSS https://www.getpapercss.com/about/ 
+    button component
+*/
+.feature-button {
+  display: block;
+  margin-bottom: 10px;
+  padding: 12px 20px;
+  font-size: 12px;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  align-self: center;
+  background-color: #fff;
+  background-image: none;
+  background-position: 0 90%;
+  background-repeat: repeat no-repeat;
+  background-size: 4px 3px;
+  border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+  box-sizing: border-box;
+  color: #41403e;
+  cursor: pointer;
+  display: inline-block;
+  font-family: 'Lucida Console', Monaco, monospace;
+  font-size: 1rem;
+  line-height: 23px;
+  outline: none;
+  text-decoration: none;
+  transition: all 235ms ease-in-out;
+  border-bottom-left-radius: 15px 255px;
+  border-bottom-right-radius: 225px 15px;
+  border-top-left-radius: 255px 15px;
+  border-top-right-radius: 15px 225px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.feature-button:hover {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
+  transform: translate3d(0, 2px, 0);
+}
+
+.feature-button:focus {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
+}

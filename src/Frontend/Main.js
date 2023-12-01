@@ -8,13 +8,13 @@ function Main(){
     return (
         <div className='MainPage'>
             <h1 className="MainPageh1">Welcome to Pixel World</h1>
-            <img src={logo} alt="Logo" className="App-logo" style={{maxWidth: '50%', maxHeight: '50s%'}}></img>
+            <img src={logo} alt="Logo" className="App-logo" style={{maxWidth: '50%', maxHeight: '50%'}}></img>
             <h2 className="MainPageh2">Let Begin!</h2>
             <br></br>
             <br></br>
             <br></br>
-            <button class="button"><Link to='/login'>Login</Link></button>
-            <button class="button"><Link to='/signup'>Signup</Link></button>
+            <button class="feature-button"><Link to='/login'>Login</Link></button>
+            <button class="feature-button"><Link to='/signup'>Signup</Link></button>
         </div>
     );
 }
