@@ -239,7 +239,9 @@ function Home() {
     
     
     const handlePixelate = () => {
-        if (image && blockSize > 0 && blockSize < image.naturalWidth && blockSize < image.naturalHeight) {
+        const img1 = new Image();
+        img1.src = image;
+        if (image && blockSize > 0 && blockSize < img1.naturalWidth && blockSize < img1.naturalHeight) {
             const img = new Image();
             img.src = image;
             img.onload = () => {
