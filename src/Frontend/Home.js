@@ -55,6 +55,8 @@ function Home() {
             reader.readAsDataURL(blob);
             reader.onloadend = () => {
                 setImage(reader.result);
+                setPixelImage(null);
+                setTransformationApplied(false);
             };
         });
     };
@@ -551,6 +553,7 @@ function rgbToHex({ r, g, b }) {
             <img src={logo} alt="Logo" className="App-logo" style={{maxWidth: '10%', maxHeight: '10%'}}></img>
             <h1>Hi {username}, Welcome to our Pixel World!</h1>
             <div className="introduction-container">
+                <h3>Tips:</h3>
                 <p className="Introduction">Let's begin your artwork. First, select an image to upload using the upload button.</p> 
                 <p className="Introduction">After you upload the image, you have a few options on how to pixelize your image. If you don't want the current changes, you can always click "Discard Changes" to go back to the original image that you uploaded. Lastly, remember to save your artwork to the server with a unique image name so you can view it in the Gallery!</p>
                 <p className="Introduction">Enjoy your time here!</p>
@@ -572,11 +575,11 @@ function rgbToHex({ r, g, b }) {
         
                 <div className="feature-buttons">
 
-                    {(image || pixelImage) && <button className="feature-button" onClick={handlePixelate}>Pixelate Image</button>}
-                    {(image || pixelImage) && <button className="feature-button" onClick={handlePixelateBW}>Black & White</button>}
-                    {(image || pixelImage) && <button className="feature-button" onClick={handleProcessImage}>Process Image</button>}
-                    {(image || pixelImage) && <button className="feature-button" onClick={handleColorPixelization}>Color</button>}
-                    {(image || pixelImage) && <button className="feature-button" onClick={handleCircleBasedPixelization}>Circular</button>}
+                    {(image || pixelImage) && <button title="Click to pixelate the image" className="feature-button" onClick={handlePixelate}>Pixelate Image</button>}
+                    {(image || pixelImage) && <button title="Click to make this image black and white" className="feature-button" onClick={handlePixelateBW}>Black & White</button>}
+                    {(image || pixelImage) && <button title="" className="feature-button" onClick={handleProcessImage}>Process Image</button>}
+                    {(image || pixelImage) && <button title="Select color in Color button and render this image" className="feature-button" onClick={handleColorPixelization}>Color</button>}
+                    {(image || pixelImage) && <button title="Click to circle pixelate the image" className="feature-button" onClick={handleCircleBasedPixelization}>Circular</button>}
                 </div>
                 {(image || pixelImage) && (
                     <div className="control-panel">
@@ -613,27 +616,44 @@ function rgbToHex({ r, g, b }) {
                             onChange={(e) => setOuterScale(Number(e.target.value))}
                             />
                         </div>
+                        <div className="slider-container">
+                            <label htmlFor="blockSizeSlider">Block Size (1 - 100): {blockSize}</label>
+                            <input 
+                                id="blockSizeSlider"
+                                type="range" 
+                                min="1" 
+                                max="100" 
+                                value={blockSize} 
+                                onChange={(e) => setBlockSize(Number(e.target.value))}
+                            />
+                        </div>
+                        <div>
+                            {(image || pixelImage) && (
+                                <label title="Choose a color to blend with" className="feature-button">
+                                    Blend Color: 
+                                    <input 
+                                    type="color" 
+                                    onChange={(e) => setBlendColor(hexToRgb(e.target.value))} 
+                                    value={rgbToHex(blendColor)}
+                                    className="selected-color-display"
+                                    style={{ 
+                                        width: '20px', // Adjust the dimensions as needed
+                                        height: '20px',
+                                        marginLeft: '10px', // Adjust spacing as needed
+                                        backgroundColor: rgbToHex(blendColor),}}
+                                    />
+                                </label>
+                            )}
+                        </div>
                     </div>
                     )}
             </div>
 
             {(image || pixelImage) && <button class="feature-button" onClick={handleDownload}>Download Image</button>}
-            {(image || pixelImage) && <label>Blend Color: </label>}
-            {(image || pixelImage) && <input 
-            type="color" 
-            onChange={(e) => setBlendColor(hexToRgb(e.target.value))} 
-            value={rgbToHex(blendColor)}
-            />}
-            {(image || pixelImage) && <input 
-                    type="number" 
-                    value={blockSize}
-                    onChange={(e) => setBlockSize(Number(e.target.value))}
-                    placeholder="Enter block size"
-            />}
+            
             {(image || pixelImage) && <button class="feature-button" onClick={uploadImageToServer}>Save Image to Server</button>}
             {(image || pixelImage) && <button class="feature-button" onClick={DiscardChange}>Discard Changes</button>}
             {(image || pixelImage) && <input type="text" id="imageName" name="imageName" placeholder="Type image name here" value={imageName} onChange={handleImageName}></input>}
-            {(image || pixelImage) && <button class="feature-button" onClick={() => window.location.href=`/images/${username}`}>View Images</button>}
             {processedColors && (
                 <div>
                     <h2>Extracted Colors</h2>
