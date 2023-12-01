@@ -14,6 +14,9 @@ function Home() {
     const [pixelImage, setPixelImage] = useState(null);
     const [transformationApplied, setTransformationApplied] = useState(false);
     const [blendColor, setBlendColor] = useState({ r: 255, g: 255, b: 255 }); // j
+    const [innerRadius, setInnerRadius] = useState(150); //j
+    const [innerScale, setInnerScale] = useState(10); //j
+    const [outerScale, setOuterScale] = useState(20); //j
 
     const compressImage = (file, maxWidth, maxHeight, callback) => {
         const reader = new FileReader();
@@ -320,23 +323,24 @@ function Home() {
     };
 
     // 1
-const handleCircleBasedPixelization = () => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-    img.src = image;
-    img.onload = () => {
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-      ctx.drawImage(img, 0, 0);
-      circleBasedPixelization(ctx, img, 300, 30, 70); // Example values for innerRadius, innerScale, and outerScale
-      const pixelatedDataUrl = canvas.toDataURL();
-      setImage(pixelatedDataUrl);
+    const handleCircleBasedPixelization = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.src = transformationApplied ? pixelImage : image;
+        img.onload = () => {
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            ctx.drawImage(img, 0, 0);
+            circleBasedPixelization(ctx, img, innerRadius, innerScale, outerScale);
+            const pixelatedDataUrl = canvas.toDataURL();
+            setPixelImage(pixelatedDataUrl);
+            setTransformationApplied(true);
+        };
+        img.onerror = () => {
+            console.error("Error loading image for circular pixelation");
+        };
     };
-    img.onerror = () => {
-      console.error("Error loading image for pixelation");
-    };
-  };
 
   function isInsideCircle(x, y, centerX, centerY, radius) {
     return (x - centerX) ** 2 + (y - centerY) ** 2 <= radius ** 2;
@@ -570,10 +574,47 @@ function rgbToHex({ r, g, b }) {
 
                     {(image || pixelImage) && <button className="feature-button" onClick={handlePixelate}>Pixelate Image</button>}
                     {(image || pixelImage) && <button className="feature-button" onClick={handlePixelateBW}>Black & White</button>}
-                    {(image || pixelImage) && <button className="feature-button" onClick={handleCircleBasedPixelization}>Circular</button>}
                     {(image || pixelImage) && <button className="feature-button" onClick={handleProcessImage}>Process Image</button>}
-                    {(image || pixelImage) && <button className="feature-button" onClick={handleColorPixelization}>Apply Color Pixelization</button>}
+                    {(image || pixelImage) && <button className="feature-button" onClick={handleColorPixelization}>Color</button>}
+                    {(image || pixelImage) && <button className="feature-button" onClick={handleCircleBasedPixelization}>Circular</button>}
                 </div>
+                {(image || pixelImage) && (
+                    <div className="control-panel">
+                        <div className="slider-container">
+                            <label htmlFor="innerRadiusSlider">Radius (0 - 300): {innerRadius}</label>
+                            <input 
+                            id="innerRadiusSlider"
+                            type="range" 
+                            min="0" 
+                            max="300" 
+                            value={innerRadius} 
+                            onChange={(e) => setInnerRadius(Number(e.target.value))}
+                            />
+                            </div>
+                        <div className="slider-container">
+                            <label htmlFor="innerScaleSlider">Inner Scale (1 - 100): {innerScale}</label>
+                            <input 
+                            id="innerScaleSlider"
+                            type="range" 
+                            min="1" 
+                            max="100" 
+                            value={innerScale} 
+                            onChange={(e) => setInnerScale(Number(e.target.value))}
+                            />
+                        </div>
+                        <div className="slider-container">
+                            <label htmlFor="outerScaleSlider">Outer Scale (1 - 200): {outerScale}</label>
+                            <input 
+                            id="outerScaleSlider"
+                            type="range" 
+                            min="1" 
+                            max="200" 
+                            value={outerScale} 
+                            onChange={(e) => setOuterScale(Number(e.target.value))}
+                            />
+                        </div>
+                    </div>
+                    )}
             </div>
 
             {(image || pixelImage) && <button class="feature-button" onClick={handleDownload}>Download Image</button>}
