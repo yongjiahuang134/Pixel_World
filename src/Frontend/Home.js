@@ -344,10 +344,6 @@ function Home() {
         };
     };
 
-  function isInsideCircle(x, y, centerX, centerY, radius) {
-    return (x - centerX) ** 2 + (y - centerY) ** 2 <= radius ** 2;
-}
-
 function circleBasedPixelization(ctx, img, innerRadius, innerScale, outerScale) {
     const width = img.width;
     const height = img.height;
