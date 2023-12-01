@@ -60,7 +60,6 @@ app.post("/signup", async(req,res)=>{
         }
         else{
             res.json("not exist");
-            //insert data into mongodb
             await collection.insertMany([data]);
         }
     }
@@ -97,7 +96,7 @@ app.post('/uploadimage', async (req, res) => {
 });
 
 app.listen(8002, () => {
-    console.log('Server is running on port 8001');
+    console.log('Server is running on port 8002');
 });
 
 app.get('/getimages/:username', async (req, res) => {
@@ -109,4 +108,26 @@ app.get('/getimages/:username', async (req, res) => {
         console.error(error);
         res.status(500).send({ message: 'Error fetching images' });
     }
+});
+
+app.get('/getImageData/:username', async (req, res) => {
+    const { username } = req.params;
+    const { imageName } = req.query;
+
+    try {
+        const imageData = await Image.findOne({ username, imageName });
+
+        if (imageData) {
+            res.json({ imageData });
+        } else {
+            res.status(404).json({ message: 'Image not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching image data:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+app.listen(8003, () => {
+    console.log('Server is running on port 8003');
 });

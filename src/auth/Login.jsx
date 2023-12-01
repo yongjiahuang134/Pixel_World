@@ -13,12 +13,12 @@ export const Login = (props) => {
     
         if (textbox.value.length === 0) {
           errorSpan.textContent = 'Need to input something for your username';
-          textbox.style.border = '1px solid #FF0000'; // Apply red border
+          textbox.style.border = '1px solid #FF0000';
         } else if (!/^[a-zA-Z0-9]+$/.test(textbox.value)) {
             errorSpan.textContent = 'Username can only contain letters and numbers';
         } else {
-          errorSpan.textContent = ''; // Clear error message
-          textbox.style.border = '1px solid #ced4da'; // Reset border to default
+          errorSpan.textContent = ''; 
+          textbox.style.border = '1px solid #ced4da'; 
         }
 
     }
@@ -28,12 +28,12 @@ export const Login = (props) => {
     
         if (textbox.value.length === 0) {
           errorSpan.textContent = 'Need to input something for your Password';
-          textbox.style.border = '1px solid #FF0000'; // Apply red border
+          textbox.style.border = '1px solid #FF0000'; 
         } else if (!/^[a-zA-Z0-9]+$/.test(textbox.value)) {
             errorSpan.textContent = 'Password can only contain letters and numbers';
         } else {
-          errorSpan.textContent = ''; // Clear error message
-          textbox.style.border = '1px solid #ced4da'; // Reset border to default
+          errorSpan.textContent = ''; 
+          textbox.style.border = '1px solid #ced4da'; 
         }
 
     }

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useParams , useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams , useNavigate, useLocation } from 'react-router-dom';
 import logo from './logo.jpg'
 
 //Main Page after login/signup
@@ -17,7 +17,23 @@ function Home() {
     const [innerRadius, setInnerRadius] = useState(150); //j
     const [innerScale, setInnerScale] = useState(10); //j
     const [outerScale, setOuterScale] = useState(20); //j
+    const location = useLocation();
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const imageName = queryParams.get('imageName');
+
+        if (imageName) {
+            fetch(`http://localhost:8003/getImageData/${username}?imageName=${imageName}`)
+                .then(response => response.json())
+                .then(data => {
+                    setImage(data.imageData.imageData);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }, [location, username]);
+    
     const compressImage = (file, maxWidth, maxHeight, callback) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -76,21 +92,16 @@ function Home() {
         })
         .then(response => {
             if (response.status === 200) {
-                // If the response status is 200 (OK), log success
                 console.log('Success:', response);
             } else if (response.status === 400) {
-                // If the response status is 400 (Bad Request), handle the error
                 return response.json();
             } else {
-                // Handle other response statuses here if needed
                 throw new Error('Unexpected error');
             }
         })
         .then(data => {
-            // Handle the data in case of a 400 response
             if (data) {
                 console.error('Error:', data.message);
-                // Display an alert to change to another name
                 alert(`Error: ${data.message}. Please choose another name.`);
             }
         })
@@ -109,19 +120,10 @@ function Home() {
         link.click();
     }
 
-    // const handlePixelate = () => {
-    //     // Call the external function here and pass the image to it
-    //     // pixelateImage(image);
-
-
-    //     return;
-    // }
-
     const handleImageName = (event) => {
         setImageName(event.target.value);
     }
     
-    const navigate = useNavigate();
 
     const handleCloudButtonClick = () => {
         navigate(`/images/${username}`);
@@ -234,7 +236,6 @@ function Home() {
             }
         }
     
-        // Ensure at least one pixel was counted to avoid division by zero
         count = count === 0 ? 1 : count;
     
         return {
@@ -543,7 +544,6 @@ function rgbToHex({ r, g, b }) {
       
     };
         
-    // TODO: Change pallete to resizeble box
     return (
         <div className='MainPage'>
             <img src={logo} alt="Logo" className="App-logo" style={{maxWidth: '10%', maxHeight: '10%'}}></img>
@@ -633,9 +633,9 @@ function rgbToHex({ r, g, b }) {
                                     value={rgbToHex(blendColor)}
                                     className="selected-color-display"
                                     style={{ 
-                                        width: '20px', // Adjust the dimensions as needed
+                                        width: '20px', 
                                         height: '20px',
-                                        marginLeft: '10px', // Adjust spacing as needed
+                                        marginLeft: '10px', 
                                         backgroundColor: rgbToHex(blendColor),}}
                                     />
                                 </label>

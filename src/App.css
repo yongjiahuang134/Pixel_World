@@ -23,7 +23,7 @@
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 2; /* Higher z-index for the header */
+    z-index: 2;
   }
   .MainPageh2 {
     position: absolute;
@@ -115,10 +115,11 @@ input {
 }
 
 .Introduction {
-  font-size: 14px; /* Adjust the font size as needed */
+  font-size: 14px; 
   text-align: justify;
 }
 .introduction-container{
+  padding-bottom: 10px;
   background-size: 4px 3px;
   border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
   border-style: solid;
@@ -192,3 +193,19 @@ input {
   box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
 }
 
+
+.Gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  grid-gap: 16px; 
+}
+
+.image-item {
+  width: 100%; 
+  margin-bottom: 16px; 
+}
+
+img {
+  width: 100%;
+  height: auto; 
+}
