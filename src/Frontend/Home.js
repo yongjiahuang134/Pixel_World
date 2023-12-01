@@ -10,6 +10,8 @@ function Home() {
     const { username } = useParams();
     const [processedColors, setProcessedColors] = useState(null);
     const [blockSize, setBlockSize] = useState(30);
+    const [pixelImage, setPixelImage] = useState(null);
+    const [transformationApplied, setTransformationApplied] = useState(false);
 
     const compressImage = (file, maxWidth, maxHeight, callback) => {
         const reader = new FileReader();
@@ -236,14 +238,22 @@ function Home() {
         };
     };
     
-    
+    const DiscardChange = () => {
+        setPixelImage(null);
+        setTransformationApplied(false);
+    }
     
     const handlePixelate = () => {
         const img1 = new Image();
         img1.src = image;
         if (image && blockSize > 0 && blockSize < img1.naturalWidth && blockSize < img1.naturalHeight) {
             const img = new Image();
-            img.src = image;
+            if (transformationApplied){
+                img.src = pixelImage;
+            }
+            else{
+                img.src = image;
+            }
             img.onload = () => {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
@@ -254,7 +264,8 @@ function Home() {
                 pixelateImage(ctx, img, blockSize);
     
                 const pixelatedDataUrl = canvas.toDataURL();
-                setImage(pixelatedDataUrl);
+                setPixelImage(pixelatedDataUrl);
+                setTransformationApplied(true);
             };
             img.onerror = () => {
                 console.error("Error loading image for pixelation");
@@ -270,7 +281,12 @@ function Home() {
         img1.src = image;
         if (image && blockSize > 0 && blockSize < img1.naturalWidth && blockSize < img1.naturalHeight) {
             const img = new Image();
-            img.src = image;
+            if (transformationApplied){
+                img.src = pixelImage;
+            }
+            else{
+                img.src = image;
+            }
             img.onload = () => {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
@@ -281,7 +297,8 @@ function Home() {
                 pixelateImageBW(ctx, img, 1);
     
                 const pixelatedDataUrl = canvas.toDataURL();
-                setImage(pixelatedDataUrl);
+                setPixelImage(pixelatedDataUrl);
+                setTransformationApplied(true);
             };
             img.onerror = () => {
                 console.error("Error loading image for pixelation");
@@ -342,24 +359,25 @@ function Home() {
             <input type='file' accept='image/*' id='fileUpload' onChange={handleImageUpload} style={{display: 'none'}} />
             <label htmlFor='fileUpload' style={{cursor: 'pointer'}}>Upload Image</label>
             <button class="button" onClick={handleCloudButtonClick}>Cloud</button>
-            {image && (
+            {(image || pixelImage) && (
                 <div style={{width: '500px', height: '500px'}}>
-                    <img src={image} alt='Uploaded' style={{maxWidth: '100%', maxHeight: '100%'}} />
+                    <img src={transformationApplied ? pixelImage : image} alt='Uploaded' style={{maxWidth: '100%', maxHeight: '100%'}} />
                 </div>
             )}
-            {image && <button class="button" onClick={handleDownload}>Download Image</button>}
+            {(image || pixelImage) && <button class="button" onClick={handleDownload}>Download Image</button>}
             <input 
                 type="number" 
                 value={blockSize}
                 onChange={(e) => setBlockSize(Number(e.target.value))}
                 placeholder="Enter block size"
             />
-            {image && <button class="button" onClick={handlePixelate}>Pixelate Image</button>}
-            {image && <button class="button" onClick={handlePixelateBW}>Black & White</button>}
-            {image && <button class="button" onClick={handleProcessImage}>Process Image</button>}
-            {image && <button class="button" onClick={uploadImageToServer}>Save Image to Server</button>}
-            {image && <input type="text" id="imageName" name="imageName" placeholder="Type image name here" value={imageName} onChange={handleImageName}></input>}
-            {image && <button class="button" onClick={() => window.location.href=`/images/${username}`}>View Images</button>}
+            {(image || pixelImage) && <button class="button" onClick={handlePixelate}>Pixelate Image</button>}
+            {(image || pixelImage) && <button class="button" onClick={handlePixelateBW}>Black & White</button>}
+            {(image || pixelImage) && <button class="button" onClick={handleProcessImage}>Process Image</button>}
+            {(image || pixelImage) && <button class="button" onClick={uploadImageToServer}>Save Image to Server</button>}
+            {(image || pixelImage) && <button class="button" onClick={DiscardChange}>Discard Change</button>}
+            {(image || pixelImage) && <input type="text" id="imageName" name="imageName" placeholder="Type image name here" value={imageName} onChange={handleImageName}></input>}
+            {(image || pixelImage) && <button class="button" onClick={() => window.location.href=`/images/${username}`}>View Images</button>}
             {processedColors && (
                 <div>
                     <h2>Extracted Colors</h2>
