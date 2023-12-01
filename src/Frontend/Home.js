@@ -13,6 +13,7 @@ function Home() {
     const [blockSize, setBlockSize] = useState(30);
     const [pixelImage, setPixelImage] = useState(null);
     const [transformationApplied, setTransformationApplied] = useState(false);
+    const [blendColor, setBlendColor] = useState({ r: 255, g: 255, b: 255 }); // j
 
     const compressImage = (file, maxWidth, maxHeight, callback) => {
         const reader = new FileReader();
@@ -417,6 +418,93 @@ function circleBasedPixelization(ctx, img, innerRadius, innerScale, outerScale) 
 
 
 // 2
+
+const handleColorPixelization = () => {
+    const img = new Image();
+    img.src = transformationApplied ? pixelImage : image;
+    img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        ctx.drawImage(img, 0, 0);
+        
+        // Convert color state to array [r, g, b]
+        const colorArray = [blendColor.r, blendColor.g, blendColor.b];
+        colorPixelization(ctx, img, blockSize, colorArray);
+        
+        const pixelatedDataUrl = canvas.toDataURL();
+        setPixelImage(pixelatedDataUrl);
+        setTransformationApplied(true);
+    };
+    img.onerror = () => {
+        console.error("Error loading image for color pixelation");
+    };
+};
+
+function colorPixelization(ctx, img, scale, color) {
+    const width = img.width;
+    const height = img.height;
+    ctx.drawImage(img, 0, 0, width, height);
+    const imageData = ctx.getImageData(0, 0, width, height);
+    const data = imageData.data;
+    const factor = 1; // Assuming factor is globally defined elsewhere in your code
+
+    for (let i = 0; i < width; i += scale) {
+        for (let j = 0; j < height; j += scale) {
+            let sums = [0, 0, 0];
+            let count = 0;
+
+            // Collect pixel data within the block
+            for (let x = i; x < i + scale && x < width; x++) {
+                for (let y = j; y < j + scale && y < height; y++) {
+                    let index = (y * width + x) * 4;
+                    sums[0] += data[index];     // R
+                    sums[1] += data[index + 1]; // G
+                    sums[2] += data[index + 2]; // B
+                    count++;
+                }
+            }
+
+            // Calculate average color and apply the blend with specified color
+            if (count > 0) {
+                let avgColor = sums.map((s, k) => {
+                    let avgComponent = s / count;
+                    avgComponent = avgComponent + (color[k] - avgComponent) / 4;
+                    return Math.min(Math.round(avgComponent * factor), 255);
+                });
+
+                // Apply the average blended color to the block
+                for (let x = i; x < i + scale && x < width; x++) {
+                    for (let y = j; y < j + scale && y < height; y++) {
+                        let index = (y * width + x) * 4;
+                        data[index] = avgColor[0];     // R
+                        data[index + 1] = avgColor[1]; // G
+                        data[index + 2] = avgColor[2]; // B
+                    }
+                }
+            }
+        }
+    }
+
+    // Put the modified image data back on the canvas
+    ctx.putImageData(imageData, 0, 0);
+}
+
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
+function rgbToHex({ r, g, b }) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+}
+
+//3
     
     const calculateAverageColorBW = (ctx, startX, startY, blockSize, width, height) => {
         let total = { r: 0, g: 0, b: 0, a: 0 };
@@ -484,10 +572,17 @@ function circleBasedPixelization(ctx, img, innerRadius, innerScale, outerScale) 
                     {(image || pixelImage) && <button className="feature-button" onClick={handlePixelateBW}>Black & White</button>}
                     {(image || pixelImage) && <button className="feature-button" onClick={handleCircleBasedPixelization}>Circular</button>}
                     {(image || pixelImage) && <button className="feature-button" onClick={handleProcessImage}>Process Image</button>}
+                    {(image || pixelImage) && <button className="feature-button" onClick={handleColorPixelization}>Apply Color Pixelization</button>}
                 </div>
             </div>
 
             {(image || pixelImage) && <button class="feature-button" onClick={handleDownload}>Download Image</button>}
+            {(image || pixelImage) && <label>Blend Color: </label>}
+            {(image || pixelImage) && <input 
+            type="color" 
+            onChange={(e) => setBlendColor(hexToRgb(e.target.value))} 
+            value={rgbToHex(blendColor)}
+            />}
             {(image || pixelImage) && <input 
                     type="number" 
                     value={blockSize}
