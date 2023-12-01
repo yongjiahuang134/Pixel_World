@@ -278,7 +278,7 @@ function Home() {
                 canvas.height = img.naturalHeight;
                 ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight);
                 
-                pixelateImageBW(ctx, img, blockSize);
+                pixelateImageBW(ctx, img, 1);
     
                 const pixelatedDataUrl = canvas.toDataURL();
                 setImage(pixelatedDataUrl);
@@ -355,7 +355,7 @@ function Home() {
                 placeholder="Enter block size"
             />
             {image && <button class="button" onClick={handlePixelate}>Pixelate Image</button>}
-            {image && <button class="button" onClick={handlePixelateBW}>Pixelate Image Black & White</button>}
+            {image && <button class="button" onClick={handlePixelateBW}>Black & White</button>}
             {image && <button class="button" onClick={handleProcessImage}>Process Image</button>}
             {image && <button class="button" onClick={uploadImageToServer}>Save Image to Server</button>}
             {image && <input type="text" id="imageName" name="imageName" placeholder="Type image name here" value={imageName} onChange={handleImageName}></input>}
