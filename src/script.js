@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Pallete from './pallete';
+import Palette from './palette';
 import './styles.css';
 import myImage from './bwsikeke.png';
-import previewImage from './sikeke85.png';
+import previewImage from './sikeke85cc.png';
 
 function App() {
   const canvasRef = useRef(null); // Create a ref for the canvas
   const [width, setWidth] = useState(10);
   const [height, setHeight] = useState(10);
   const [color, setColor] = useState("#000000");
+  const [palette, setPalette] = useState([]);
 
-  const [showPreview, setShowPreview] = useState(false);
+
+  const [showPreview, setShowPreview] = useState(true);
 
   // Initialize a blank grid => make this into a function
   const blankGrid = () => Array(width).fill().map(() => Array(height).fill("#ffffff"));
@@ -37,9 +39,10 @@ function App() {
     setGrid(blankGrid());
   };
 
-  const loadImageAndCreateGrid = (imageSrc, setGridFunc) => {
+  const loadImageAndCreateGrid = (imageSrc, setGridFunc, setPaletteFunc, updatePalette) => {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', {willReadFrequently: true});
+
     const img = new Image();
 
     img.onload = () => {
@@ -52,6 +55,8 @@ function App() {
       const blocksX = img.width / blockSize;
       const blocksY = img.height / blockSize;
       let gridTemp = [];
+      // send to palette.js
+      let pallete = [];
 
       for (let i = 0; i < blocksY; i++) {
         let row = [];
@@ -62,31 +67,41 @@ function App() {
           const g = pixels[1];
           const b = pixels[2];
           const a = pixels[3];
-          row.push(`rgba(${r},${g},${b},${a})`);
+          const color = `rgba(${r},${g},${b},${a})`;
+          row.push(color);
+
+          // record each different coor
+          if (updatePalette && !pallete.includes(color)){
+            pallete.push(color);
+          }
         }
         gridTemp.push(row);
       }
 
       setGridFunc(gridTemp);
+      if (updatePalette){
+        setPaletteFunc(pallete);
+      }
+      
     };
     // Set the source of the image
     img.src = imageSrc;
   };
 
-
-  useEffect(() => {
-    loadImageAndCreateGrid(myImage, setGrid);
-  }, []);
-
   useEffect(() => {
     if (showPreview) {
-      loadImageAndCreateGrid(previewImage, setPreviewGrid);
+      loadImageAndCreateGrid(previewImage, setPreviewGrid, setPalette, true);
     } else {
       setPreviewGrid(null);
     }
   }, [showPreview]);
 
-  const pallete = Array.from({ length: 10 }, (_, i) => `#${(i * 25).toString(16).padStart(2, '0')}0000`);
+  useEffect(() => {
+    loadImageAndCreateGrid(myImage, setGrid, setPalette, false);
+  }, []);
+
+  //const pallete = Array.from({ length: 10 }, (_, i) => `#${(i * 25).toString(16).padStart(2, '0')}0000`);
+  
   // use form submission such that prevents page from refreshing
   // form wraps change of width and height state variable and submit to make new blank grid
   return (
@@ -97,12 +112,11 @@ function App() {
         <input type="submit" value="Submit" />
       </form>
 
-      <Pallete colors={pallete} setColor={setColor} />
+      <Palette colors={palette} setColor={setColor} />
 
       <ColorPicker color={color} setColor={setColor} />
 
       <canvas ref={canvasRef} style={{ display: 'none' }} />
-      {/* <Grid grid={grid} changeColor={changeColor} previewImage={showPreview ? previewImage : null} /> */}
       <Grid grid={showPreview ? previewGrid : grid} changeColor={changeColor} />
       <label>
         Preview:
