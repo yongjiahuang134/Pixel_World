@@ -19,6 +19,7 @@ function Home() {
     const [outerScale, setOuterScale] = useState(20); //j
     const location = useLocation();
     const navigate = useNavigate();
+    const [canClick, setCanClick] = useState(false);
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
@@ -281,6 +282,7 @@ function Home() {
         } else {
             alert("Block size must be a positive number.");
         }
+        setCanClick(true);
     };
 
     // pixelate image with black and white: R, G, B --> average for each pixel
@@ -499,6 +501,9 @@ function rgbToHex({ r, g, b }) {
 }
 
 //3
+const handleNavigate = () => {
+    navigate('/script', { state: { image: image, data: blockSize } });
+  };
     
     const calculateAverageColorBW = (ctx, startX, startY, blockSize, width, height) => {
         let total = { r: 0, g: 0, b: 0, a: 0 };
@@ -567,6 +572,7 @@ function rgbToHex({ r, g, b }) {
                     {(image || pixelImage) && <button title="" className="feature-button" onClick={handleProcessImage}>Process Image</button>}
                     {(image || pixelImage) && <button title="Select color in Color button and render this image" className="feature-button" onClick={handleColorPixelization}>Color</button>}
                     {(image || pixelImage) && <button title="Click to circle pixelate the image" className="feature-button" onClick={handleCircleBasedPixelization}>Circular</button>}
+                    {(image || pixelImage) && <button onClick={handleNavigate} disabled={!canClick}>Navigate to New Project</button>}
                 </div>
                 {(image || pixelImage) && (
                     <div className="control-panel">

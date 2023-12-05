@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Palette from './palette';
 import './styles.css';
-import myImage from './bwsikeke.png';
-import previewImage from './sikeke85cc.png';
+import { useLocation } from 'react-router-dom';
 
-function App() {
+function Script() {
+  const location = useLocation();
+  const { image, data } = location.state || {};
+  console.log("here");
+  console.log(data);
   const canvasRef = useRef(null); // Create a ref for the canvas
   const [width, setWidth] = useState(10);
   const [height, setHeight] = useState(10);
@@ -51,7 +54,7 @@ function App() {
       ctx.drawImage(img, 0, 0, img.width, img.height);
 
       // let size of each block be passed in
-      const blockSize = 85;
+      const blockSize = data;
       const blocksX = img.width / blockSize;
       const blocksY = img.height / blockSize;
       let gridTemp = [];
@@ -90,15 +93,21 @@ function App() {
 
   useEffect(() => {
     if (showPreview) {
-      loadImageAndCreateGrid(previewImage, setPreviewGrid, setPalette, true);
+      loadImageAndCreateGrid(image, setPreviewGrid, setPalette, true);
     } else {
       setPreviewGrid(null);
     }
   }, [showPreview]);
 
-  useEffect(() => {
-    loadImageAndCreateGrid(myImage, setGrid, setPalette, false);
-  }, []);
+  // useEffect(() => {
+  //   if (externalImage) {
+  //     loadImageAndCreateGrid(externalImage, setGrid, setPalette, false);
+  //   }
+  // }, [externalImage]);
+
+  // useEffect(() => {
+  //   loadImageAndCreateGrid(myImage, setGrid, setPalette, false);
+  // }, []);
 
   //const pallete = Array.from({ length: 10 }, (_, i) => `#${(i * 25).toString(16).padStart(2, '0')}0000`);
   
@@ -155,4 +164,4 @@ function Grid({ grid, changeColor }) {
 
 
 
-export default App;
+export default Script;
