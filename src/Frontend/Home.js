@@ -79,7 +79,7 @@ function Home() {
     };
 
     const uploadImageToServer = () => {
-        if (image && imageName){
+        if ( (transformationApplied ? pixelImage : image) && imageName){
             fetch('http://localhost:8002/uploadimage', {
             method: 'POST',
             headers: {
@@ -88,7 +88,7 @@ function Home() {
             body: JSON.stringify({
                 username: username,
                 imageName: imageName,
-                image: image,
+                image: (transformationApplied ? pixelImage : image),
             }),
         })
         .then(response => {
