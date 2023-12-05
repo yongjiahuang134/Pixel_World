@@ -572,7 +572,7 @@ const handleNavigate = () => {
                     {(image || pixelImage) && <button title="" className="feature-button" onClick={handleProcessImage}>Process Image</button>}
                     {(image || pixelImage) && <button title="Select color in Color button and render this image" className="feature-button" onClick={handleColorPixelization}>Color</button>}
                     {(image || pixelImage) && <button title="Click to circle pixelate the image" className="feature-button" onClick={handleCircleBasedPixelization}>Circular</button>}
-                    {(image || pixelImage) && <button onClick={handleNavigate} disabled={!canClick}>Navigate to New Project</button>}
+                    {(image || pixelImage) && <button title="Click to script image" className="feature-button" onClick={handleNavigate} disabled={!canClick}>Navigate to New Project</button>}
                 </div>
                 {(image || pixelImage) && (
                     <div className="control-panel">
