@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Palette from './palette';
 import './styles.css';
 import { useLocation } from 'react-router-dom';
+import logo from './Frontend/logo.jpg'
 
 function Script() {
   const location = useLocation();
@@ -122,6 +123,14 @@ function Script() {
   // form wraps change of width and height state variable and submit to make new blank grid
   return (
     <div>
+      <img src={logo} alt="Logo" className="App-logo-small" style={{maxWidth: '10%', maxHeight: '10%'}}></img>
+      <h1>This is Paint by Number Game!</h1>
+      <div className="introduction-container">
+        <h3>Tips:</h3>
+        <p className="Introduction">Select the canvas size and click submit; it will generate an empty canvas.</p>
+        <p className="Introduction">You can choose any color you like and start filling up the canvas with the chosen color!</p>
+
+      </div>
       <form onSubmit={handleSubmit}>
         Select width: <input type="number" value={width} onChange={handleWidthChange} />
         Select height: <input type="number" value={height} onChange={handleHeightChange} />
@@ -129,8 +138,17 @@ function Script() {
       </form>
 
       <Palette colors={palette} setColor={setColor} />
-
-      <ColorPicker color={color} setColor={setColor} />
+      <label title="Choose a color to blend with" className="feature-button" style={{marginRight: '80%'}}>
+        Color
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <span style={{ marginRight: '10px', backgroundColor: color, width: '20px', height: '20px', display: 'inline-block' }}></span>
+          <ColorPicker
+            color={color}
+            setColor={setColor}
+            style={{backgroundColor: color}}
+          />
+        </div>
+      </label>
 
       <canvas ref={canvasRef} style={{ display: 'none' }} />
       <Grid grid={showPreview ? previewGrid : grid} changeColor={changeColor} />
