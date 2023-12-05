@@ -20,7 +20,7 @@ function ImagesList() {
 
     return (
         <div>
-            <img src={logo} alt="Logo" className="App-logo" style={{maxWidth: '10%', maxHeight: '10%'}}></img>
+            <img src={logo} alt="Logo" className="App-logo-gallery" style={{maxWidth: '10%', maxHeight: '10%'}}></img>
             <h1>Hi {username}, Welcome to your Art Gallery!</h1>
             <div className="introduction-container">
                 <h3>Tips:</h3>
