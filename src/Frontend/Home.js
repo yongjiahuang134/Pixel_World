@@ -316,6 +316,7 @@ function Home() {
         } else {
             alert("Block size must be a positive number.");
         }
+        setCanClick(true);
     };
     const pixelateImageBW = (ctx, img, blockSize) => {
         for (let x = 0; x < img.width; x += blockSize) {
@@ -436,6 +437,7 @@ const handleColorPixelization = () => {
     img.onerror = () => {
         console.error("Error loading image for color pixelation");
     };
+    setCanClick(true);
 };
 
 function colorPixelization(ctx, img, scale, color) {
@@ -502,7 +504,7 @@ function rgbToHex({ r, g, b }) {
 
 //3
 const handleNavigate = () => {
-    navigate('/script', { state: { image: image, data: blockSize } });
+    navigate('/script', { state: { image: pixelImage, data: blockSize } });
   };
     
     const calculateAverageColorBW = (ctx, startX, startY, blockSize, width, height) => {
