@@ -568,6 +568,10 @@ const handleNavigate = () => {
                 <h3>Tips:</h3>
                 <p className="Introduction">Let's begin your artwork. First, select an image to upload using the upload button.</p> 
                 <p className="Introduction">After you upload the image, you have a few options on how to pixelize your image. If you don't want the current changes, you can always click "Discard Changes" to go back to the original image that you uploaded. Lastly, remember to save your artwork to the server with a unique image name so you can view it in the Gallery!</p>
+                <p className="Introduction">1. You can pixelize your image selecting a blocksize.</p>
+                <p className="Introduction">2. You can apply black and white effect.</p> 
+                <p className="Introduction">3. Apply a color filter of your choice</p>
+                <p className="Introduction">4. And even choose to create a circlular focusing effect in the center of the image.</p>
                 <p className="Introduction">Enjoy your time here!</p>
             </div>
             
