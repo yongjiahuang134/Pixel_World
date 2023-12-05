@@ -9,8 +9,8 @@ function Script() {
   console.log("here");
   console.log(data);
   const canvasRef = useRef(null); // Create a ref for the canvas
-  const [width, setWidth] = useState(10);
-  const [height, setHeight] = useState(10);
+  const [width, setWidth] = useState();
+  const [height, setHeight] = useState();
   const [color, setColor] = useState("#000000");
   const [palette, setPalette] = useState([]);
 
@@ -18,7 +18,7 @@ function Script() {
   const [showPreview, setShowPreview] = useState(true);
 
   // Initialize a blank grid => make this into a function
-  const blankGrid = () => Array(width).fill().map(() => Array(height).fill("#ffffff"));
+  const blankGrid = () => Array(height).fill().map(() => Array(width).fill("#ffffff"));
   const [grid, setGrid] = useState(blankGrid);
 
   const [previewGrid, setPreviewGrid] = useState(null);
@@ -55,8 +55,8 @@ function Script() {
 
       // let size of each block be passed in
       const blockSize = data;
-      const blocksX = img.width / blockSize;
-      const blocksY = img.height / blockSize;
+      const blocksX = Math.ceil(img.width / blockSize);
+      const blocksY = Math.ceil(img.height / blockSize);
       let gridTemp = [];
       // send to palette.js
       let pallete = [];
@@ -85,6 +85,13 @@ function Script() {
       if (updatePalette){
         setPaletteFunc(pallete);
       }
+
+      setWidth(blocksX);
+      setHeight(blocksY);
+
+      if (!showPreview) {
+        setGrid(blankGrid());
+      }
       
     };
     // Set the source of the image
@@ -97,7 +104,7 @@ function Script() {
     } else {
       setPreviewGrid(null);
     }
-  }, [showPreview]);
+  }, [showPreview], image);
 
   // useEffect(() => {
   //   if (externalImage) {
@@ -105,9 +112,9 @@ function Script() {
   //   }
   // }, [externalImage]);
 
-  // useEffect(() => {
-  //   loadImageAndCreateGrid(myImage, setGrid, setPalette, false);
-  // }, []);
+  useEffect(() => {
+    setGrid(blankGrid());
+  }, []);
 
   //const pallete = Array.from({ length: 10 }, (_, i) => `#${(i * 25).toString(16).padStart(2, '0')}0000`);
   
