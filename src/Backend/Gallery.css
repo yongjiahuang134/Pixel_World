@@ -6,6 +6,10 @@ body {
 }
 
 .App-logo {
+    position: relative;
+    top: 15px;
+    width: 80px;
+    height: 80px;
     display: block;
     margin: 0 auto;
 }

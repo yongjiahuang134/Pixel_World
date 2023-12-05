@@ -24,13 +24,14 @@ function ImagesList() {
             <h1>Hi {username}, Welcome to your Art Gallery!</h1>
             <div className="introduction-container">
                 <h3>Tips:</h3>
+                <p className="Introduction">Here are all the artwork you have created.</p> 
                 <p className="Introduction">You can click the image name to continue your work on this specific image!</p> 
             </div>
             <input
                 list="image-names"
                 type="text"
                 id="searchBar"
-                placeholder="Search images..."
+                placeholder="Search images by title..."
                 onChange={(e) => setSearchString(e.target.value.toLowerCase())}
             />
             <datalist id="image-names">

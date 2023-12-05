@@ -562,7 +562,7 @@ const handleNavigate = () => {
         
     return (
         <div className='MainPage'>
-            <img src={logo} alt="Logo" className="App-logo" style={{maxWidth: '10%', maxHeight: '10%'}}></img>
+            <img src={logo} alt="Logo" className="App-logo-small" style={{maxWidth: '10%', maxHeight: '10%'}}></img>
             <h1>Hi {username}, Welcome to our Pixel World!</h1>
             <div className="introduction-container">
                 <h3>Tips:</h3>
