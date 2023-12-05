@@ -62,6 +62,7 @@ export const Signup = (props) => {
 
     return (
         <div className="auth-form">
+            <h1>Welcome to Pixel World!</h1>
             <h1>Sign Up</h1>
             <form className="signup-form" onSubmit={handleSubmit}>
                 <label htmlFor="username"> Username: </label>
