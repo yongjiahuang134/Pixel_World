@@ -7,9 +7,19 @@ function Main(){
     
     return (
         <div className='MainPage'>
+            
             <h1 className="MainPageh1">Welcome to Pixel World</h1>
+            <h2 className="MainPageh3">A world where imagination and creativity gets applied onto images.</h2>
             <img src={logo} alt="Logo" className="App-logo" style={{maxWidth: '50%', maxHeight: '50%'}}></img>
-            <h2 className="MainPageh2">Let Begin!</h2>
+            <h2 className="MainPageh2"><br></br>Let Begin!</h2>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
             <br></br>
             <br></br>
             <br></br>

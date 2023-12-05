@@ -20,20 +20,32 @@
 
   .MainPageh1 {
     position: absolute;
-    top: 0;
+    top: 10%;
     left: 50%;
     transform: translateX(-50%);
     z-index: 2;
   }
+
   .MainPageh2 {
     position: absolute;
-    top: 60%;
+    top: 65%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  .MainPageh3 {
+    position: absolute;
+    top: 20%;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1;
   }
 
   .App-logo {
+    /* padding-top: 200px; */
+    position: relative;
+    top: 95px;
     animation: App-logo-spin infinite 20s linear;
   }
 
