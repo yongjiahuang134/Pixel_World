@@ -364,54 +364,72 @@ function Home() {
             return dx * dx + dy * dy <= radiusSquared;
         }
     
-        function applyPixelization(startX, startY, endX, endY, scale) {
-            for (let x = startX; x < endX; x += scale) {
-                for (let y = startY; y < endY; y += scale) {
-                    let sums = [0, 0, 0];
-                    let count = 0;
+        function applyPixelization(startX, startY, scale) {
+            let sums = [0, 0, 0];
+            let count = 0;
     
-                    for (let i = 0; i < scale; i++) {
-                        for (let j = 0; j < scale; j++) {
-                            if (x + i < width && y + j < height) {
-                                const index = ((y + j) * width + (x + i)) * 4;
-                                sums[0] += data[index];     
-                                sums[1] += data[index + 1];
-                                sums[2] += data[index + 2];
-                                count++;
-                            }
-                        }
+            for (let i = 0; i < scale; i++) {
+                for (let j = 0; j < scale; j++) {
+                    const x = startX + i;
+                    const y = startY + j;
+                    if (x < width && y < height) {
+                        const index = (y * width + x) * 4;
+                        sums[0] += data[index];
+                        sums[1] += data[index + 1];
+                        sums[2] += data[index + 2];
+                        count++;
                     }
+                }
+            }
     
-                    if (count > 0) {
-                        const avg = sums.map(s => s / count);
-                        for (let i = 0; i < scale; i++) {
-                            for (let j = 0; j < scale; j++) {
-                                if (x + i < width && y + j < height) {
-                                    const index = ((y + j) * width + (x + i)) * 4;
-                                    data[index] = avg[0];
-                                    data[index + 1] = avg[1];
-                                    data[index + 2] = avg[2];
-                                }
-                            }
+            if (count > 0) {
+                const avg = sums.map(s => s / count);
+                for (let i = 0; i < scale; i++) {
+                    for (let j = 0; j < scale; j++) {
+                        const x = startX + i;
+                        const y = startY + j;
+                        if (x < width && y < height) {
+                            const index = (y * width + x) * 4;
+                            data[index] = avg[0];
+                            data[index + 1] = avg[1];
+                            data[index + 2] = avg[2];
                         }
                     }
                 }
             }
         }
     
-        applyPixelization(0, 0, width, height, outerScale);
+        for (let x = 0; x < width; x += outerScale) {
+            for (let y = 0; y < height; y += outerScale) {
+                if (!isInsideCircle(x + outerScale / 2, y + outerScale / 2)) {
+                    applyPixelization(x, y, outerScale);
+                }
+            }
+        }
     
         for (let x = 0; x < width; x += innerScale) {
             for (let y = 0; y < height; y += innerScale) {
                 if (isInsideCircle(x + innerScale / 2, y + innerScale / 2)) {
-                    applyPixelization(x, y, x + innerScale, y + innerScale, innerScale);
+                    applyPixelization(x, y, innerScale);
+                }
+            }
+        }
+    
+        for (let x = 0; x < width; x += innerScale) {
+            for (let y = 0; y < height; y += innerScale) {
+                const inside = isInsideCircle(x, y);
+                const rightEdge = isInsideCircle(x + innerScale, y) !== inside;
+                const bottomEdge = isInsideCircle(x, y + innerScale) !== inside;
+    
+                if (rightEdge || bottomEdge) {
+                    applyPixelization(x, y, innerScale);
                 }
             }
         }
     
         ctx.putImageData(imageData, 0, 0);
-    }    
-
+    }
+    
 
 // 2
 
