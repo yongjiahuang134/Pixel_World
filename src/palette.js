@@ -20,7 +20,7 @@ function Palette({ colors, setColor }) {
     <div className="palette">
       {colors.map((color, i) => (
         <div key={i} id={`color-${i}`} onClick={() => setColor(rgbaToHex(color))}>
-          {i + 1}
+          {i}
         </div>
       ))}
     </div>

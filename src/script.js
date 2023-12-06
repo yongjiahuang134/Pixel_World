@@ -14,6 +14,9 @@ function Script() {
   const [color, setColor] = useState("#000000");
   const [palette, setPalette] = useState([]);
 
+  const [numbers, setNumbers] = useState(Array(height).fill().map(() => Array(width).fill(0)));
+
+
 
   const [showPreview, setShowPreview] = useState(true);
 
@@ -44,7 +47,7 @@ function Script() {
 
   const loadImageAndCreateGrid = (imageSrc, setGridFunc, setPaletteFunc, updatePalette) => {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d', {willReadFrequently: true});
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
     const img = new Image();
 
@@ -60,9 +63,16 @@ function Script() {
       let gridTemp = [];
       // send to palette.js
       let pallete = [];
+      let numbers = [];
+
+      let prevColorArray = [255, 255, 255];
+      let prevColorRGBA = 'rgba(255, 255, 255, 0)';
+      pallete.push('rgba(255, 255, 255, 1)');
+
 
       for (let i = 0; i < blocksY; i++) {
         let row = [];
+        let numbersRow = [];
         for (let j = 0; j < blocksX; j++) {
           const imageData = ctx.getImageData(j * blockSize, i * blockSize, blockSize, blockSize);
           const pixels = imageData.data;
@@ -73,16 +83,31 @@ function Script() {
           const color = `rgba(${r},${g},${b},${a})`;
           row.push(color);
 
-          // record each different coor
-          if (updatePalette && !pallete.includes(color)){
-            pallete.push(color);
+          // record each different color
+          if (updatePalette) {
+            let currColor = [r, g, b];
+            let currColorRGBA = color;
+            if (similar(prevColorArray, currColor)) {
+              currColor = prevColorArray;
+              currColorRGBA = prevColorRGBA;
+            }
+            if (!pallete.includes(currColorRGBA)) {
+              pallete.push(currColorRGBA);
+            }
+
+            const colorIndex = pallete.indexOf(currColorRGBA);
+            numbersRow.push(colorIndex);
+
+            prevColorArray = currColor;
+            prevColorRGBA = currColorRGBA;
           }
         }
         gridTemp.push(row);
+        numbers.push(numbersRow);
       }
 
       setGridFunc(gridTemp);
-      if (updatePalette){
+      if (updatePalette) {
         setPaletteFunc(pallete);
       }
 
@@ -92,7 +117,9 @@ function Script() {
       if (!showPreview) {
         setGrid(blankGrid());
       }
-      
+
+      setNumbers(numbers);
+
     };
     // Set the source of the image
     img.src = imageSrc;
@@ -117,7 +144,7 @@ function Script() {
   }, []);
 
   //const pallete = Array.from({ length: 10 }, (_, i) => `#${(i * 25).toString(16).padStart(2, '0')}0000`);
-  
+
   // use form submission such that prevents page from refreshing
   // form wraps change of width and height state variable and submit to make new blank grid
   return (
@@ -133,7 +160,7 @@ function Script() {
       <ColorPicker color={color} setColor={setColor} />
 
       <canvas ref={canvasRef} style={{ display: 'none' }} />
-      <Grid grid={showPreview ? previewGrid : grid} changeColor={changeColor} />
+      <Grid grid={showPreview ? previewGrid : grid} changeColor={changeColor} numbers={numbers} />
       <label>
         Preview:
         <input type="checkbox" checked={showPreview} onChange={() => setShowPreview(!showPreview)} />
@@ -149,7 +176,7 @@ function ColorPicker({ color, setColor }) {
 }
 
 
-function Grid({ grid, changeColor }) {
+function Grid({ grid, changeColor, numbers }) {
   return (
     <table>
       <tbody>
@@ -160,7 +187,9 @@ function Grid({ grid, changeColor }) {
                 key={`${i}-${j}`}
                 onClick={() => changeColor(i, j)}
                 style={{ background: grid[i][j] }}
-              />
+              >
+                {numbers[i][j]}
+              </td>
             ))}
           </tr>
         )}
@@ -168,6 +197,19 @@ function Grid({ grid, changeColor }) {
     </table>
   );
 }
+
+function similar(color1, color2) {
+  // determine if colors are similar via euclideanDistance
+  const [r1, g1, b1] = color1;
+  const [r2, g2, b2] = color2;
+
+  const dr = r1 - r2;
+  const dg = g1 - g2;
+  const db = b1 - b2;
+
+  return Math.sqrt(dr * dr + dg * dg + db * db) < 100;
+}
+
 
 
 
