@@ -94,6 +94,7 @@ function Home() {
         .then(response => {
             if (response.status === 200) {
                 console.log('Success:', response);
+                alert(`Image ${imageName} was successfully uploaded to the server! You can view it in the Gallery.`);
             } else if (response.status === 400) {
                 return response.json();
             } else {
@@ -183,6 +184,7 @@ function Home() {
             Math.pow(color1[2] - color2[2], 2)
         );
     }
+    /*
     const handleProcessImage = () => {
         const img = new Image();
         img.src = image;
@@ -209,7 +211,7 @@ function Home() {
             const classifiedColors = classifyColors(colorList, 300);
             setProcessedColors(classifiedColors);
         };
-    };
+    };*/
     const pixelateImage = (ctx, img, blockSize) => {
         for (let x = 0; x < img.width; x += blockSize) {
             for (let y = 0; y < img.height; y += blockSize) {
@@ -250,6 +252,7 @@ function Home() {
     const DiscardChange = () => {
         setPixelImage(null);
         setTransformationApplied(false);
+        setCanClick(false);
     }
     
     const handlePixelate = () => {
@@ -346,6 +349,7 @@ function Home() {
         img.onerror = () => {
             console.error("Error loading image for circular pixelation");
         };
+        setCanClick(true);
     };
 
     function circleBasedPixelization(ctx, img, innerRadius, innerScale, outerScale) {
@@ -562,12 +566,17 @@ const handleNavigate = () => {
         
     return (
         <div className='MainPage'>
-            <img src={logo} alt="Logo" className="App-logo" style={{maxWidth: '10%', maxHeight: '10%'}}></img>
+            <img src={logo} alt="Logo" className="App-logo-small" style={{maxWidth: '10%', maxHeight: '10%'}}></img>
             <h1>Hi {username}, Welcome to our Pixel World!</h1>
             <div className="introduction-container">
                 <h3>Tips:</h3>
                 <p className="Introduction">Let's begin your artwork. First, select an image to upload using the upload button.</p> 
                 <p className="Introduction">After you upload the image, you have a few options on how to pixelize your image. If you don't want the current changes, you can always click "Discard Changes" to go back to the original image that you uploaded. Lastly, remember to save your artwork to the server with a unique image name so you can view it in the Gallery!</p>
+                <p className="Introduction">1. You can pixelize your image selecting a blocksize.</p>
+                <p className="Introduction">2. You can apply black and white effect.</p> 
+                <p className="Introduction">3. Apply a color filter of your choice</p>
+                <p className="Introduction">4. And even choose to create a circlular focusing effect in the center of the image.</p>
+                <p className="Introduction">After pixelizing your image, you can click 'Paint by Number' to enter a coloring game!</p>
                 <p className="Introduction">Enjoy your time here!</p>
             </div>
             
@@ -589,10 +598,9 @@ const handleNavigate = () => {
 
                     {(image || pixelImage) && <button title="Click to pixelate the image" className="feature-button" onClick={handlePixelate}>Pixelate Image</button>}
                     {(image || pixelImage) && <button title="Click to make this image black and white" className="feature-button" onClick={handlePixelateBW}>Black & White</button>}
-                    {(image || pixelImage) && <button title="" className="feature-button" onClick={handleProcessImage}>Process Image</button>}
                     {(image || pixelImage) && <button title="Select color in Color button and render this image" className="feature-button" onClick={handleColorPixelization}>Color</button>}
                     {(image || pixelImage) && <button title="Click to circle pixelate the image" className="feature-button" onClick={handleCircleBasedPixelization}>Circular</button>}
-                    {(image || pixelImage) && <button title="Click to script image" className="feature-button" onClick={handleNavigate} disabled={!canClick}>Navigate to New Project</button>}
+                    {(image || pixelImage) && <button title="Click to enter coloring game" className="feature-button" onClick={handleNavigate} disabled={!canClick}>Paint by Number</button>}
                 </div>
                 {(image || pixelImage) && (
                     <div className="control-panel">
