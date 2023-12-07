@@ -5,7 +5,7 @@ import Main from './Frontend/Main';
 import { BrowserRouter as Router,  Routes,  Route } from "react-router-dom";
 import Home from './Frontend/Home';
 import ImagesList from './Backend/ImagesList';
-import Script from './script'
+import Script from './script';
 
 function App() {
   

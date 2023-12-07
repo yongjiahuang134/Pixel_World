@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-
-mongoose.connect("mongodb+srv://cs35lproject1234:uclabruins@cluster0.qusbyem.mongodb.net/?retryWrites=true&w=majority")
+mongoose.connect(process.env.MONGODB_API)
 .then(()=>{
     console.log("connected to mongodb");
 }).catch(()=>{
