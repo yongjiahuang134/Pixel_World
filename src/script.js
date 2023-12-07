@@ -158,10 +158,10 @@ function Script() {
         <p className="Introduction">You can choose any color you like and start filling up the canvas with the chosen color!</p>
 
       </div>
-      <form onSubmit={handleSubmit}>
+      <form className="feature-button"  onSubmit={handleSubmit}>
         Select width: <input type="number" value={width} onChange={handleWidthChange} />
         Select height: <input type="number" value={height} onChange={handleHeightChange} />
-        <input type="submit" value="Start" />
+        <input className="feature-button"  type="submit" value="Start" />
       </form>
 
       <Palette colors={palette} setColor={setColor} />
