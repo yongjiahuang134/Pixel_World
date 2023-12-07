@@ -17,7 +17,7 @@ Create a .env file inside root directory of the cloned repository. Defined MONGO
 Your .env file should look like this:
 
 ```
-mongodb+srv://username:password@cluster0.qusbyem.mongodb.net/?retryWrites=true&w=majority
+MONGODB_API = "mongodb+srv://username:password@cluster0.qusbyem.mongodb.net/?retryWrites=true&w=majority"
 ```
 
 ## Run Frontend
@@ -40,8 +40,8 @@ npx nodemon src/Backend/send.js
 
 # Creators
 
-[Jingran Zhang](https://github.com/Mochimomomo)
-[Yongjia Huang](https://github.com/yongjiahuang134)
-[Jiaqi Yang](https://github.com/Jackiexxxx666)
-[Jordan Jiang](https://github.com/joyuan02)
-[Eric Jin](https://github.com/erikkkun)
+[Jingran Zhang](https://github.com/Mochimomomo)\
+[Yongjia Huang](https://github.com/yongjiahuang134)\
+[Jiaqi Yang](https://github.com/Jackiexxxx666)\
+[Jordan Jiang](https://github.com/joyuan02)\
+[Eric Jin](https://github.com/erikkkun)\
