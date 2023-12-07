@@ -161,7 +161,7 @@ function Script() {
       <form onSubmit={handleSubmit}>
         Select width: <input type="number" value={width} onChange={handleWidthChange} />
         Select height: <input type="number" value={height} onChange={handleHeightChange} />
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Start" />
       </form>
 
       <Palette colors={palette} setColor={setColor} />
