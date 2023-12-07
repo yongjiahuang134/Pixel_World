@@ -40,8 +40,8 @@ npx nodemon src/Backend/send.js
 
 # Creators
 
-[Jingran Zhang](https://github.com/Mochimomomo)\
-[Yongjia Huang](https://github.com/yongjiahuang134)\
-[Jiaqi Yang](https://github.com/Jackiexxxx666)\
-[Jordan Jiang](https://github.com/joyuan02)\
-[Eric Jin](https://github.com/erikkkun)\
+[Jingran Zhang](https://github.com/Mochimomomo):Mochimomomo\
+[Yongjia Huang](https://github.com/yongjiahuang134):yongjiahuang134\
+[Jiaqi Yang](https://github.com/Jackiexxxx666): Jackiexxxx666\
+[Jordan Jiang](https://github.com/joyuan02)joyuan02\
+[Eric Jin](https://github.com/erikkkun):erikkkun
